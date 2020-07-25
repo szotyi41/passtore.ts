@@ -30,5 +30,9 @@ html,
 body {
 	margin: 0;
 	padding: 0;
+
+	#app {
+		max-width: 100vw;
+	}
 }
 </style>

@@ -1,70 +1,69 @@
 <template>
-    <div class="left-bar">
-        <div class="server-search">
-            <div class="input-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text"><i class="fa fa-search"></i></span>
-				</div>		
+    <div>
+		<div class="sidebar">
 
-                <input type="text" 
-                    v-model="searchText"
-                    class="form-control" 
-                    placeholder="Local Host" 
-                    aria-label="Username">
-            </div>
-        </div>
+			<!-- Search -->
+			<div class="server-search">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fa fa-search"></i></span>
+					</div>		
 
-        <div class="server-list">
-            <div class="server" v-for="(server, serverIndex) in serversFiltered" :key="serverIndex" @click="setCurrentServer(server)">
-                <span class="server-name">{{ server.name }}</span>
-                <span class="server-host">{{ server.public_host }}</span>
-            </div>
-        </div>
+					<input type="text" 
+						v-model="searchText"
+						class="form-control" 
+						placeholder="Local Host" 
+						aria-label="Username">
+				</div>
+			</div>
+
+			<!-- Server List -->
+			<div class="server-list">
+				<div class="server" v-for="(server, serverIndex) in serversFiltered" :key="serverIndex" @click="setCurrentServer(server)">
+					<span class="server-name">{{ server.name }}</span>
+					<span class="server-host">{{ server.public_host }}</span>
+				</div>
+			</div>
+
+		</div>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 
 import { IServer } from '../store/servers';
 
-declare module 'vue/types/vue' {
-	interface Vue {
-		searchText: String;
+@Component({
+	computed: {
+		...mapState('servers', ['servers'])
 	}
-}
+})
+export default class ServerList extends Vue {
+	private searchText: String = '';
 
-export default Vue.extend({
+	get serversFiltered() {
+		const searchText: String = this.searchText.toLowerCase();
+		return (this as any).servers.filter((server: IServer) => server.name.toLowerCase().indexOf(searchText.toString()) !== -1);
+	}
+
 	mounted() {
 		this.$store.dispatch('servers/getServers');
-	},
-	computed: {
-		...mapState('servers', ['servers']),
-
-		serversFiltered: function() {
-			const searchText: String = this.searchText.toLowerCase();
-			return this.servers.filter((server: IServer) => server.name.toLowerCase().indexOf(searchText.toString()) !== -1);
-		}
-	},
-	data() {
-		return {
-			searchText: ''
-		};
-	},
-	methods: {
-		setCurrentServer(server: IServer) {
-			this.$store.commit('servers/setCurrentServer', server);
-		}
 	}
-});
+
+	setCurrentServer(server: IServer) {
+		this.$store.commit('servers/setCurrentServer', server);
+	}
+}
 </script>
 
 <style lang="scss" scoped>
 @import './../assets/_variables.scss';
 
-.left-bar {
+.sidebar {
 	width: 100%;
+	padding: 16px;
 	height: 100vh;
 	border-right: 1px solid;
 	border-color: $color-border;

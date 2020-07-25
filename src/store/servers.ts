@@ -4,13 +4,22 @@ import fb from './firebase'
 
 Vue.use(Vuex);
 
+export interface IProfile {
+    database: String;
+    username: String;
+    password: String;
+}
+
 export interface IService {
     name: String;
     type: String;
-    host: String;
+    private_host: String;
+    public_host: String;
     port: Number;
-    username: String
+    database: String;
+    username: String;
     password: String;
+    profiles: Array<IProfile>;
     show_password: Boolean;
 };
 
@@ -39,6 +48,7 @@ export default {
         clearState(state: any) {
             state.servers = serverState.servers;
             state.server = serverState.server;
+            state.service = serverState.service;
         },
         
         // Servers

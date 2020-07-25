@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="row">
     <ServerList class="col-md-4"></ServerList>
-    <Server class="col-md-8"></Server>
+    <router-view class="col-md-8"></router-view>
   </div>
 </template>
 
@@ -23,6 +23,8 @@ export default Vue.extend({
 @import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 @import '../node_modules/shards-ui/dist/css/shards.min.css';
+
+@import './assets/_variables.scss';
 
 html,
 body {

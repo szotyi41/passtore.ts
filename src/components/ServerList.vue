@@ -1,16 +1,23 @@
 <template>
     <div class="left-bar">
         <div class="server-search">
-            <div class="server-search-icon">
-                <i class="fa fa-search"></i>
+            <div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text"><i class="fa fa-search"></i></span>
+				</div>		
+
+                <input type="text" 
+                    v-model="searchText"
+                    class="form-control" 
+                    placeholder="Local Host" 
+                    aria-label="Username">
             </div>
-            <input type="text" v-model="searchText" placeholder="Search">
         </div>
 
         <div class="server-list">
             <div class="server" v-for="(server, serverIndex) in serversFiltered" :key="serverIndex" @click="setCurrentServer(server)">
                 <span class="server-name">{{ server.name }}</span>
-                <span class="server-host">{{ server.host }}</span>
+                <span class="server-host">{{ server.public_host }}</span>
             </div>
         </div>
     </div>
@@ -20,7 +27,7 @@
 import Vue from 'vue';
 import { mapState } from 'vuex';
 
-import { Server } from '../store/servers';
+import { IServer } from '../store/servers';
 
 declare module 'vue/types/vue' {
 	interface Vue {
@@ -35,9 +42,9 @@ export default Vue.extend({
 	computed: {
 		...mapState('servers', ['servers']),
 
-		serversFiltered: function () {
+		serversFiltered: function() {
 			const searchText: String = this.searchText.toLowerCase();
-			return this.servers.filter((server: Server) => server.name.toLowerCase().indexOf(searchText.toString()) !== -1);
+			return this.servers.filter((server: IServer) => server.name.toLowerCase().indexOf(searchText.toString()) !== -1);
 		}
 	},
 	data() {
@@ -46,7 +53,7 @@ export default Vue.extend({
 		};
 	},
 	methods: {
-		setCurrentServer(server: Server) {
+		setCurrentServer(server: IServer) {
 			this.$store.commit('servers/setCurrentServer', server);
 		}
 	}
@@ -54,14 +61,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$color-hover: #016ada;
-$color-border: #ddd;
-$input-height: 36px;
+@import './../assets/_variables.scss';
 
 .left-bar {
 	width: 100%;
 	height: 100vh;
-	border-right: 1px solid $color-border;
+	border-right: 1px solid;
+	border-color: $color-border;
 	user-select: none;
 }
 
@@ -97,33 +103,15 @@ $input-height: 36px;
 
 .server-search {
 	display: flex;
-	height: $input-height;
 	width: calc(100%-8px);
-	border: 1px solid $color-border;
-	border-radius: 4px;
-	margin: 8px;
-
-	-webkit-box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
-	-moz-box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
-	box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
 
 	.server-search-icon {
 		display: flex;
 		i {
 			vertical-align: middle;
-			line-height: $input-height;
-			height: $input-height;
 			color: $color-border;
 			padding: 0 12px;
 		}
-	}
-	input {
-		color: #333;
-		border: none;
-		outline: none;
-		padding: 0;
-		width: 100%;
-		background: transparent;
 	}
 }
 </style>

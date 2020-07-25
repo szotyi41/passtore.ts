@@ -4,25 +4,32 @@ import fb from './firebase'
 
 Vue.use(Vuex);
 
-export interface Service {
+export interface IService {
     name: String;
     type: String;
     host: String;
     port: Number;
     username: String
+    password: String;
+    show_password: Boolean;
 };
 
-export interface Server {
+export interface IServer {
     id: String;
     name: String;
     host: String;
-    services: Array<Service>;
+    services: Array<IService>;
     removed: Boolean;
 };
 
-const serverState: { servers: Array<Server>, server: Server | Object } = {
+const serverState: { 
+    servers: Array<IServer>, 
+    server: IServer | Object, 
+    service: IService | Object 
+} = {
     servers: [],
-    server: {}
+    server: {},
+    service: {}
 };
 
 export default {
@@ -35,23 +42,28 @@ export default {
         },
         
         // Servers
-        setServers(state: any, servers: Array<Server>) {
+        setServers(state: any, servers: Array<IServer>) {
             console.log(servers);
             state.servers = servers;
         },
-        setServer(state: any, server: Server) {
-            const index = state.servers.map((server: Server) => server.id).indexOf(server.id);
+        setServer(state: any, server: IServer) {
+            const index = state.servers.map((server: IServer) => server.id).indexOf(server.id);
             if (index >= 0) Vue.set(state.servers, index, server);
             else state.servers.push(server);
         },
-        removeServer(state: any, server: Server) {
-            const index = state.servers.map((server: Server) => server.id).indexOf(server.id);
+        removeServer(state: any, server: IServer) {
+            const index = state.servers.map((server: IServer) => server.id).indexOf(server.id);
             if (index >= 0) Vue.delete(state.servers, index);
         },
 
         // Current Server
-        setCurrentServer(state: any, server: Server) {
+        setCurrentServer(state: any, server: IServer) {
             state.server = server;
+        },
+
+        // Current Service
+        setCurrentService(state: any, service: IService) {
+            state.service = service;
         }
     },
     actions: {
@@ -62,12 +74,12 @@ export default {
                 action.commit('setServers', servers.docs.map((server: any) => ({ id: server.id, ...server.data() })));
             });
         },
-        saveServer(action: any, server: Server) {
+        saveServer(action: any, server: IServer) {
             return fb.firestore().collection('Servers').doc(server.id.toString()).update(server).then(() => {
                 action.commit('setServer', server);
             });
         },
-        removeServer(action: any, server: Server) {
+        removeServer(action: any, server: IServer) {
             return fb.firestore().collection('Servers').doc(server.id.toString()).update({ removed: true }).then(() => {
                 action.commit('setServer', { ...server, removed: true });
             });

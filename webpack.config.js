@@ -2,8 +2,19 @@
 var path = require('path')
 var webpack = require('webpack')
 
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
+
 module.exports = {
   entry: './src/index.ts',
+	mode: 'development',
+  devtool: 'inline-source-map',
+  plugins: [new VueLoaderPlugin()],
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
@@ -26,7 +37,7 @@ module.exports = {
         }
       },
       {
-        test: /\.tsx?$/,
+        test: /\.(tsx|ts)?$/,
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: {
@@ -35,6 +46,21 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
+      },
+      {
+        test: /\.(scss|sass|css)$/i,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.(svg|ttf|woff|woff2|otf|eot)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]?[hash]'
@@ -58,7 +84,7 @@ module.exports = {
   devtool: '#eval-source-map'
 }
 
-if (process.env.NODE_ENV === 'production') {
+/* if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
@@ -77,4 +103,4 @@ if (process.env.NODE_ENV === 'production') {
       minimize: true
     })
   ])
-}
+} */

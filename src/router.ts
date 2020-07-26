@@ -8,6 +8,6 @@ Vue.use(VueRouter);
 export default new VueRouter({
     routes: [
         { path: '/', component: Server },
-        { path: '/server/{serverId}', component: Server },
+        { path: '/servers/{serverId}', component: Server },
     ]
 });

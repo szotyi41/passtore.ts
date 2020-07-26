@@ -49,7 +49,12 @@ export default class ServerList extends Vue {
 	}
 
 	mounted() {
-		this.$store.dispatch('servers/getServers');
+		this.$store.dispatch('servers/getServers').then(() => {
+			const serverId: String = this.$route.params.serverId;
+			if (serverId) {
+				const server: IServer = (this as any).servers.find((server: IServer) => server.id === serverId);
+			}
+		});
 	}
 
 	setCurrentServer(server: IServer) {

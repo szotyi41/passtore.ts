@@ -12,6 +12,15 @@
             </div>
         </div>
 
+        <div class="block">
+            <label>Type</label>
+            <div class="input-group">
+                <select class="form-control" v-model="service.type">
+                    <option v-for="(type, typeIndex) in types" :key="typeIndex">{{ type }}</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Public Host -->
         <div class="block">
             <label>Public Host</label>
@@ -166,6 +175,8 @@ import { IService } from './../store/servers';
 	}
 })
 export default class Service extends Vue {
+	private types: Array<String> = ['apache2', 'ftp', 'ssh', 'mysql', 'phpmyadmin', 'mongodb', 'ssh', 'redis'];
+
 	showPassword(service: IService) {
 		service.show_password = !service.show_password;
 		this.$forceUpdate();

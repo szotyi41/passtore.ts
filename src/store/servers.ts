@@ -1,8 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 import fb from './firebase'
-
-Vue.use(Vuex);
 
 export interface IProfile {
     database: String;

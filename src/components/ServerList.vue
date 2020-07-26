@@ -23,6 +23,13 @@
 					<span class="server-name">{{ server.name }}</span>
 					<span class="server-host">{{ server.public_host }}</span>
 				</div>
+
+				<div class="server">
+					<span class="server-name">
+						<i class="fa fa-plus"></i>
+						Add Server
+					</span>
+				</div>
 			</div>
 
 		</div>
